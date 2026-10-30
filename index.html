@@ -6,6 +6,7 @@
 <meta name="research-api" content="https://name-that-llm-research-api.kishan5111-research.workers.dev">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https: http://127.0.0.1:8787 http://localhost:8787; object-src 'none'; base-uri 'self'; form-action 'none'">
 <title>Name That LLM · Research</title>
+<link rel="stylesheet" href="./reader.css">
 <link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./app.css">
 </head>
 <body>
@@ -15,7 +16,7 @@
 </div>
 <div id="workspace" class="shell hidden">
  <aside><a class="brand" href="#/overview"><span class="brand-mark">n/</span><span>Name That LLM<small>TEAM RESEARCH</small></span></a>
- <nav aria-label="Workspace"><a href="#/overview" data-section="overview">Overview</a><a href="#/experiments" data-section="experiments">Experiments <span id="experiment-count"></span></a><div id="experiment-children" class="folder-children hidden"></div><a href="#/runs" data-section="runs">Live runs <span id="run-count"></span></a><a href="#/submissions" data-section="submissions">CV & leaderboard</a><a href="#/board" data-section="board">Research board</a><a href="#/agents" data-section="agents">Agents</a><a href="#/docs" data-section="docs">Documents <span id="document-count"></span></a><div id="document-children" class="folder-children hidden"></div></nav>
+ <nav aria-label="Workspace"><a href="#/overview" data-section="overview">Overview</a><a href="#/experiments" data-section="experiments">Experiments <span id="experiment-count"></span></a><div id="experiment-children" class="folder-children hidden"></div><a href="#/reader" data-section="reader">Response Reader</a><a href="#/data" data-section="data">Data</a><a href="#/runs" data-section="runs">Live runs <span id="run-count"></span></a><a href="#/submissions" data-section="submissions">CV & leaderboard</a><a href="#/board" data-section="board">Ideas & to-do</a><a href="#/agents" data-section="agents">Agents</a><a href="#/docs" data-section="docs">Documents <span id="document-count"></span></a><div id="document-children" class="folder-children hidden"></div></nav>
  <div class="sidebar-bottom"><span class="connection-dot" id="connection-dot"></span><span id="connection-state">Connecting</span><p id="viewer-name"></p><button id="signout" class="text-button">Sign out</button></div></aside>
  <main><header class="topbar"><div id="breadcrumb">WORKSPACE / OVERVIEW</div><div class="topbar-right"><span id="sync-time"></span><button id="refresh" class="text-button">Refresh ↻</button></div></header>
  <div id="connection-warning" class="notice hidden" role="status"></div><div id="page-error" class="notice error hidden" role="alert"></div><div id="view" aria-live="polite"></div>
