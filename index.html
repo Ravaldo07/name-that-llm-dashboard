@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="research-api" content="https://name-that-llm-research-api.kishan5111-research.workers.dev">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https: http://127.0.0.1:8787 http://localhost:8787; object-src 'none'; base-uri 'self'; form-action 'none'">
+<title>Name That LLM · Research</title>
+<link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./app.css">
+</head>
+<body>
+<div id="login" class="login-screen">
+ <div class="login-copy"><p class="eyebrow">NAME THAT LLM / SHARED RESEARCH</p><h1>Name That LLM<br>Research workspace.</h1><p>Experiments, results, and research notes.<br>Shared by the team and its agents.</p><div class="login-rule"></div><p class="small muted">The interface is public. Your research requires an access token.</p></div>
+ <form id="login-form" class="login-form"><p class="eyebrow">WORKSPACE ACCESS</p><h2>Sign in to the workspace.</h2><div id="api-field"><label for="api-url">Research API</label><input id="api-url" type="url" placeholder="https://your-api.workers.dev" autocomplete="url" required></div><label for="access-token">Your access token</label><input id="access-token" type="password" placeholder="Paste your personal token" autocomplete="off" required><button class="primary" id="connect-button" type="submit">Open workspace <span aria-hidden="true">→</span></button><button class="text-button hidden" type="button" id="local-access">Open local workspace</button><p class="small muted">Tokens are kept in this browser tab until you sign out.</p><p id="login-error" role="alert" class="error"></p></form>
+</div>
+<div id="workspace" class="shell hidden">
+ <aside><a class="brand" href="#/overview"><span class="brand-mark">n/</span><span>Name That LLM<small>TEAM RESEARCH</small></span></a>
+ <nav aria-label="Workspace"><a href="#/overview" data-section="overview">Overview</a><a href="#/experiments" data-section="experiments">Experiments <span id="experiment-count"></span></a><div id="experiment-children" class="folder-children hidden"></div><a href="#/runs" data-section="runs">Live runs <span id="run-count"></span></a><a href="#/submissions" data-section="submissions">CV & leaderboard</a><a href="#/board" data-section="board">Research board</a><a href="#/agents" data-section="agents">Agents</a><a href="#/docs" data-section="docs">Documents <span id="document-count"></span></a><div id="document-children" class="folder-children hidden"></div></nav>
+ <div class="sidebar-bottom"><span class="connection-dot" id="connection-dot"></span><span id="connection-state">Connecting</span><p id="viewer-name"></p><button id="signout" class="text-button">Sign out</button></div></aside>
+ <main><header class="topbar"><div id="breadcrumb">WORKSPACE / OVERVIEW</div><div class="topbar-right"><span id="sync-time"></span><button id="refresh" class="text-button">Refresh ↻</button></div></header>
+ <div id="connection-warning" class="notice hidden" role="status"></div><div id="page-error" class="notice error hidden" role="alert"></div><div id="view" aria-live="polite"></div>
+ <footer class="page-footer"><span>Name That LLM · Private team research</span><span id="footer-state">Private research workspace</span></footer></main>
+</div>
+<script type="module" src="./app.js"></script>
+</body></html>
