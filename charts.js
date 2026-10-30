@@ -3,13 +3,13 @@ function svgNode(tag,attributes={},text){const n=document.createElementNS(NS,tag
 export function metricChart(title,history,key,{percent=true}={}){
  const root=document.createElement('section');root.className='chart-panel';const heading=document.createElement('h3');heading.textContent=title;root.append(heading);
  const scopes=[...new Set(history.filter(p=>Number.isFinite(p[key])).map(p=>p.scope))];
- const palette=['#315f4a','#546f91','#997b4d','#8b7496'];
+ const palette=['var(--green)','var(--blue)','var(--amber)','#8b7496'];
  const series=scopes.map((scope,i)=>({scope,color:palette[i%palette.length],points:history.filter(p=>p.scope===scope&&Number.isFinite(p[key])).sort((a,b)=>a.step-b.step)}));
  if(!series.length){const p=document.createElement('p');p.textContent='No measured points reported yet.';p.className='muted small';root.append(p);return root;}
  const all=series.flatMap(s=>s.points),maxX=Math.max(1,...all.map(p=>p.step)),maxY=percent?1:Math.max(.1,...all.map(p=>p[key]))*1.1;
  const svg=svgNode('svg',{viewBox:'0 0 560 225',role:'img','aria-label':title+' by optimizer update'});
  for(let i=0;i<=4;i++){
-  const y=185-i*40;svg.append(svgNode('line',{x1:43,y1:y,x2:545,y2:y,stroke:'#e3e5dc'}));
+  const y=185-i*40;svg.append(svgNode('line',{x1:43,y1:y,x2:545,y2:y,stroke:'var(--line)'}));
   svg.append(svgNode('text',{x:1,y:y+4},percent?`${i*25}%`:(maxY*i/4).toFixed(2)));
  }
  for(let i=0;i<=3;i++){const value=Math.round(maxX*i/3);svg.append(svgNode('text',{x:43+i*502/3,y:205,'text-anchor':i===0?'start':i===3?'end':'middle'},value.toLocaleString()));}
@@ -50,8 +50,8 @@ export function submissionCharts(records){
   plots.replaceChildren();const line=panel('Local and public scores over submissions','Line chart of local scores and public leaderboard scores');
   const all=rows.flatMap(s=>[s[key],s.public_score]).filter(Number.isFinite),low=Math.max(0,Math.floor((Math.min(.3,...all)-.03)*10)/10),high=Math.min(1,Math.max(.7,...all)+.03);
   const X=i=>48+i*490/Math.max(1,rows.length-1),Y=v=>210-(v-low)/(high-low)*180;
-  for(let i=0;i<=4;i++){const v=low+(high-low)*i/4,y=Y(v);line.svg.append(svgNode('line',{x1:48,x2:540,y1:y,y2:y,stroke:'#dfe2d8'}),svgNode('text',{x:0,y:y+4},(v*100).toFixed(0)+'%'));}
-  for(const [field,color,name]of [[key,'#546f91','Local'],['public_score','#315f4a','Public LB']]){
+  for(let i=0;i<=4;i++){const v=low+(high-low)*i/4,y=Y(v);line.svg.append(svgNode('line',{x1:48,x2:540,y1:y,y2:y,stroke:'var(--line)'}),svgNode('text',{x:0,y:y+4},(v*100).toFixed(0)+'%'));}
+  for(const [field,color,name]of [[key,'var(--blue)','Local'],['public_score','var(--green)','Public LB']]){
    let segment=[];const flush=()=>{if(segment.length)line.svg.append(svgNode('polyline',{points:segment.join(' '),fill:'none',stroke:color,'stroke-width':2}));segment=[];};
    rows.forEach((s,i)=>{if(!Number.isFinite(s[field])){flush();return;}segment.push(`${X(i)},${Y(s[field])}`);});flush();
    rows.forEach((s,i)=>{if(!Number.isFinite(s[field]))return;const c=svgNode('circle',{cx:X(i),cy:Y(s[field]),r:4,fill:color,tabindex:0});c.append(svgNode('title',{},`${s.date} · ${s.title} · ${name} ${(s[field]*100).toFixed(2)}% · ${s.validation_scenario||'Unspecified protocol'}`));line.svg.append(c);});
@@ -60,9 +60,9 @@ export function submissionCharts(records){
   const legend=document.createElement('p');legend.className='small muted';legend.textContent='Blue: local score · Green: public LB · Missing scores leave gaps.';line.p.append(legend);
   const scatter=panel('Does local validation predict public LB?','Scatter plot of local score versus public leaderboard score');
   const vals=paired.flatMap(s=>[s[key],s.public_score]),min=Math.max(0,Math.min(.3,...vals)-.03),max=Math.min(1,Math.max(.7,...vals)+.03),sx=v=>55+(v-min)/(max-min)*475,sy=v=>210-(v-min)/(max-min)*180;
-  scatter.svg.append(svgNode('line',{x1:55,y1:210,x2:530,y2:30,stroke:'#aeb6ab','stroke-dasharray':'4 4'}));
+  scatter.svg.append(svgNode('line',{x1:55,y1:210,x2:530,y2:30,stroke:'var(--muted)','stroke-dasharray':'4 4'}));
   for(let i=0;i<=4;i++){const v=min+(max-min)*i/4;scatter.svg.append(svgNode('text',{x:sx(v),y:230,'text-anchor':'middle'},(v*100).toFixed(0)+'%'),svgNode('text',{x:0,y:sy(v)+4},(v*100).toFixed(0)+'%'));}
-  paired.forEach(s=>{const c=svgNode('circle',{cx:sx(s[key]),cy:sy(s.public_score),r:5,fill:'#315f4a',tabindex:0});c.append(svgNode('title',{},`${s.title} · Local ${(s[key]*100).toFixed(2)}% · Public ${(s.public_score*100).toFixed(2)}%`));scatter.svg.append(c);});
+  paired.forEach(s=>{const c=svgNode('circle',{cx:sx(s[key]),cy:sy(s.public_score),r:5,fill:'var(--green)',tabindex:0});c.append(svgNode('title',{},`${s.title} · Local ${(s[key]*100).toFixed(2)}% · Public ${(s.public_score*100).toFixed(2)}%`));scatter.svg.append(c);});
   scatter.svg.append(svgNode('text',{x:280,y:253,'text-anchor':'middle'},'Local score → · Public LB ↑ · dashed line: equal scores'));
  };
  metric.onchange=draw;protocol.onchange=draw;draw();return root;
