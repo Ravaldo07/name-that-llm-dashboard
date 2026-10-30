@@ -34,7 +34,7 @@ async function connect(apiURL,token){
  state.api=normalizedAPI(apiURL);state.token=token.trim();if(!state.token)throw Error('Enter your access token.');
  state.viewer=await api('/v1/session');sessionStorage.setItem('research.api',state.api);sessionStorage.setItem('research.token',state.token);
  await refresh(true);$('#login').classList.add('hidden');$('#workspace').classList.remove('hidden');$('#access-token').value='';$('#viewer-name').textContent=state.viewer.name+' / '+state.viewer.role;
- if(state.poll)clearInterval(state.poll);state.poll=setInterval(()=>refresh().catch(()=>{}),30000);
+ if(state.poll)clearInterval(state.poll);state.poll=setInterval(()=>{if(!document.hidden)refresh().catch(()=>{});},30000);
 }
 async function refresh(initial=false){
  if(state.loading)return;state.loading=true;
@@ -99,3 +99,5 @@ if(!location.hash)history.replaceState(null,'','#/overview');$('#api-url').value
 if(deployedAPI&&!['localhost','127.0.0.1'].includes(location.hostname))$('#api-field').classList.add('hidden');
 if(['localhost','127.0.0.1'].includes(location.hostname)){$('#local-access').classList.remove('hidden');$('#local-access').onclick=async()=>{try{const r=await fetch('/__local_session',{cache:'no-store'});if(!r.ok)throw Error('Local session is unavailable. Paste a token from the private local credentials file.');const data=await r.json();await connect(data.api,data.token);}catch(e){$('#login-error').textContent=e.message;}};}
 if(state.token&&state.api)connect(state.api,state.token).catch(e=>showLogin(e.message));
+
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.viewer)refresh().catch(()=>{});});
