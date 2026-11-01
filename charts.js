@@ -92,3 +92,12 @@ export function formatDuration(seconds){
  const hours=Math.floor(minutes/60),rest=minutes%60;
  return `${hours}h${rest?` ${rest}m`:''}`;
 }
+
+export function trainingLogLines(run){
+ return runTelemetry(run).history.filter(p=>['training','official_training','public_source_validation','source_validation'].includes(p.scope)).slice(-40).map(p=>{
+  const values=[p.timestamp||'',`step ${p.step}`,p.scope.replaceAll('_',' ')];
+  for(const [key,label,digits]of [['loss','loss',4],['balanced_accuracy','balanced acc',4],['recall3','recall@3',4],['recall5','recall@5',4],['seconds_per_update','s/update',2]])if(Number.isFinite(p[key]))values.push(`${label}=${p[key].toFixed(digits)}`);
+  if(Number.isFinite(p.eta_seconds))values.push(`ETA ${formatDuration(p.eta_seconds)}`);
+  return values.join('  ');
+ });
+}
